@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Eike Frota portfolio</title>
+  <desc id="desc">Open Graph image placeholder for Eike Frota portfolio.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#020617"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1000" cy="140" r="150" fill="#ffffff" opacity=".05"/>
+  <circle cx="180" cy="520" r="170" fill="#ffffff" opacity=".04"/>
+  <rect x="48" y="48" width="1104" height="534" rx="40" fill="none" stroke="#ffffff" stroke-opacity=".14" stroke-width="2"/>
+  <text x="100" y="238" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="700">Eike Frota</text>
+  <text x="100" y="320" fill="#ffffff" opacity=".72" font-family="Arial, Helvetica, sans-serif" font-size="36">Full Stack Developer</text>
+  <text x="100" y="402" fill="#ffffff" opacity=".48" font-family="Arial, Helvetica, sans-serif" font-size="24">Interfaces, APIs, and continuous product delivery.</text>
+  <text x="970" y="365" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="160" font-weight="700" text-anchor="middle">EF</text>
+</svg>

@@ -1,0 +1,29 @@
+.parallax {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.scroller {
+  display: flex;
+  white-space: nowrap;
+  text-align: center;
+  font-family: var(--font-geist-sans), sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.scroller span {
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+@media (max-width: 767px) {
+  .parallax {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scroller {
+    will-change: transform;
+  }
+}
