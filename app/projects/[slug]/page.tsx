@@ -20,5 +20,5 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         notFound();
     }
 
-    return <ProjectDescriptionPage project={project} />;
+    return <ProjectDescriptionPage slug={project.slug} />;
 }

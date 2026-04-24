@@ -3,7 +3,7 @@
 import React, { useRef, useLayoutEffect, useState } from "react";
 import { motion, useMotionValue, useTransform, useAnimationFrame } from "motion/react";
 import "./skills.css";
-import { SKILLS_TICKER } from "@/app/data/site-content";
+import { useSiteLanguage } from "@/app/components/language-provider";
 
 function useElementWidth<T extends HTMLElement>(ref: React.RefObject<T | null>): number {
     const [width, setWidth] = useState(0);
@@ -101,6 +101,7 @@ export default function Skills() {
     const sectionRef = useRef<HTMLElement>(null);
     const [isMobile, setIsMobile] = React.useState(false);
     const [marqueeActive, setMarqueeActive] = React.useState(true);
+    const { content } = useSiteLanguage();
 
     React.useEffect(() => {
         const mq = window.matchMedia("(max-width: 767px)");
@@ -133,11 +134,11 @@ export default function Skills() {
 
             <div className="relative z-10 overflow-hidden space-y-4 sm:space-y-6 md:space-y-8">
                 <VelocityText baseVelocity={isMobile ? 60 : 80} isMobile={isMobile} paused={!marqueeActive}>
-                    {SKILLS_TICKER}
+                    {content.skillsTicker}
                 </VelocityText>
 
                 <VelocityText baseVelocity={isMobile ? -60 : -80} isMobile={isMobile} paused={!marqueeActive}>
-                    {SKILLS_TICKER}
+                    {content.skillsTicker}
                 </VelocityText>
             </div>
         </section>

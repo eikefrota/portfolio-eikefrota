@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MARQUEE_CONTENT } from "@/app/data/site-content";
+import { useSiteLanguage } from "@/app/components/language-provider";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -15,6 +15,7 @@ export default function Marquee() {
     const trackBottomRef = useRef<HTMLDivElement>(null);
     const mobileRow1Ref = useRef<HTMLDivElement>(null);
     const mobileRow2Ref = useRef<HTMLDivElement>(null);
+    const { content } = useSiteLanguage();
 
     useEffect(() => {
         if (!sectionRef.current) return;
@@ -114,21 +115,21 @@ export default function Marquee() {
                 <div className="w-full flex flex-col justify-center gap-12 lg:gap-14">
                     <div ref={trackTopRef} className="flex items-center whitespace-nowrap will-change-transform">
                         <span className="text-[clamp(6rem,12vw,14rem)] font-black text-foreground leading-[0.9] tracking-tighter select-none">
-                            {MARQUEE_CONTENT.desktopTopLeft}
+                            {content.marquee.desktopTopLeft}
                         </span>
                         <span className="text-[clamp(3rem,5vw,5rem)] text-foreground/20 mx-14 select-none font-light italic">
                             &amp;
                         </span>
                         <span className="text-[clamp(6rem,12vw,14rem)] font-black text-foreground leading-[0.9] tracking-tighter select-none">
-                            {MARQUEE_CONTENT.desktopTopRight}
+                            {content.marquee.desktopTopRight}
                         </span>
 
                         <div className="ml-24 pr-32 flex flex-col gap-2">
                             <span className="text-base text-foreground/45 font-mono uppercase tracking-[0.2em]">
-                                {MARQUEE_CONTENT.desktopTopLabel}
+                                {content.marquee.desktopTopLabel}
                             </span>
                             <div className="h-px w-8 bg-foreground/20 mb-2" />
-                            {MARQUEE_CONTENT.desktopTopItems.map((item) => (
+                            {content.marquee.desktopTopItems.map((item) => (
                                 <span key={item} className="text-xl text-foreground/70 font-bold uppercase tracking-tight">
                                     {item}
                                 </span>
@@ -138,21 +139,21 @@ export default function Marquee() {
 
                     <div ref={trackBottomRef} className="flex items-center whitespace-nowrap will-change-transform">
                         <span className="text-[clamp(6rem,12vw,14rem)] font-black text-foreground leading-[0.9] tracking-tighter select-none">
-                            {MARQUEE_CONTENT.desktopBottomLeft}
+                            {content.marquee.desktopBottomLeft}
                         </span>
                         <span className="text-[clamp(3rem,5vw,5rem)] text-foreground/20 mx-14 select-none font-light italic">
                             &amp;
                         </span>
                         <span className="text-[clamp(6rem,12vw,14rem)] font-black text-foreground leading-[0.9] tracking-tighter select-none">
-                            {MARQUEE_CONTENT.desktopBottomRight}
+                            {content.marquee.desktopBottomRight}
                         </span>
 
                         <div className="ml-24 pr-32 flex flex-col gap-2 text-right">
                             <span className="text-base text-foreground/45 font-mono uppercase tracking-[0.2em]">
-                                {MARQUEE_CONTENT.desktopBottomLabel}
+                                {content.marquee.desktopBottomLabel}
                             </span>
                             <div className="ml-auto h-px w-8 bg-foreground/20 mb-2" />
-                            {MARQUEE_CONTENT.desktopBottomItems.map((item) => (
+                            {content.marquee.desktopBottomItems.map((item) => (
                                 <span key={item} className="text-xl text-foreground/70 font-bold uppercase tracking-tight">
                                     {item}
                                 </span>
@@ -166,7 +167,7 @@ export default function Marquee() {
                 <div className="space-y-2">
                     <div ref={mobileRow1Ref} className="whitespace-nowrap translate-x-12">
                         <span className="text-7xl font-black text-foreground uppercase leading-none tracking-tighter">
-                            {MARQUEE_CONTENT.mobileTop}
+                            {content.marquee.mobileTop}
                         </span>
                     </div>
                     <div className="flex items-center gap-4">
@@ -176,16 +177,16 @@ export default function Marquee() {
                     </div>
                     <div ref={mobileRow2Ref} className="whitespace-nowrap -translate-x-12 flex justify-end">
                         <span className="text-7xl font-black text-foreground uppercase leading-none tracking-tighter">
-                            {MARQUEE_CONTENT.mobileBottom}
+                            {content.marquee.mobileBottom}
                         </span>
                     </div>
                 </div>
 
                 <div className="mobile-services-grid grid grid-cols-1 gap-4 pt-8">
                     <span className="text-[10px] text-foreground/45 font-mono uppercase tracking-[0.3em] mb-2">
-                        {MARQUEE_CONTENT.mobileLabel}
+                        {content.marquee.mobileLabel}
                     </span>
-                    {MARQUEE_CONTENT.mobileItems.map((item) => (
+                    {content.marquee.mobileItems.map((item) => (
                         <div key={item} className="mobile-service-item flex items-center gap-3">
                             <div className="w-1.5 h-1.5 rounded-full bg-foreground/25" />
                             <span className="text-lg text-foreground/60 font-medium tracking-tight whitespace-nowrap overflow-hidden text-ellipsis">

@@ -8,8 +8,8 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState, type RefObject
 import { createPortal } from "react-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { projects, type Project } from "@/app/data/projects";
-import { PROJECTS_HOME_CONTENT } from "@/app/data/site-content";
+import { type Project } from "@/app/data/projects";
+import { useSiteLanguage } from "@/app/components/language-provider";
 import { releaseDocumentScroll } from "@/app/utils/release-document-scroll";
 import { prefersHardNavigationToProjectDetail, projectDetailPath } from "@/app/utils/project-detail-navigation";
 
@@ -41,6 +41,8 @@ type DesktopGalleryProps = {
     activeIndex: number;
     viewportShell: string;
     goToProject: (slug: string) => void;
+    srProgressText: string;
+    scrubHint: string;
 };
 
 const ProjectsDesktopGallery = memo(function ProjectsDesktopGallery({
@@ -50,6 +52,8 @@ const ProjectsDesktopGallery = memo(function ProjectsDesktopGallery({
     activeIndex,
     viewportShell,
     goToProject,
+    srProgressText,
+    scrubHint,
 }: DesktopGalleryProps) {
     const project = featured[activeIndex] ?? featured[0];
     const slug = project?.slug ?? "";
@@ -192,10 +196,10 @@ const ProjectsDesktopGallery = memo(function ProjectsDesktopGallery({
                             ))}
                         </div>
                         <p className="sr-only">
-                            Project {activeIndex + 1} of {featured.length}. {project.title}.
+                            {srProgressText} {project.title}.
                         </p>
                         <p className="mt-2 text-center font-mono text-[8px] uppercase tracking-[0.28em] text-white/50 sm:text-[9px]">
-                            {PROJECTS_HOME_CONTENT.scrubHint}
+                            {scrubHint}
                         </p>
                     </div>
                 </div>
@@ -206,7 +210,8 @@ const ProjectsDesktopGallery = memo(function ProjectsDesktopGallery({
 
 export default function Projects() {
     const router = useRouter();
-    const featured = useMemo(() => projects.slice(0, FEATURED_COUNT), []);
+    const { content, projects } = useSiteLanguage();
+    const featured = useMemo(() => projects.slice(0, FEATURED_COUNT), [projects]);
     const sectionRef = useRef<HTMLElement>(null);
     const viewportRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
@@ -357,6 +362,7 @@ export default function Projects() {
 
     const viewportShell =
         "h-[72dvh] min-h-[300px] lg:h-[min(95vh,1040px)] lg:min-h-[520px] xl:h-[min(97vh,1180px)]";
+    const srProgressText = `${content.projectsHome.progressLabel} ${activeIndex + 1} ${content.projectsHome.projectCountLabel} ${featured.length}.`;
 
     const transitionOverlay =
         typeof document !== "undefined" && isNavigating
@@ -391,15 +397,15 @@ export default function Projects() {
                 ref={sectionRef}
                 id="projects"
                 className="projects-section scroll-mt-24  bg-background text-foreground"
-                aria-label="Projects"
+                aria-label={content.projectsHome.sectionAriaLabel}
             >
                 <div className="mx-auto w-full max-w-[1920px] px-5 py-14 sm:px-8 md:px-12 lg:px-14 xl:px-18 2xl:max-w-none 2xl:pl-24 2xl:pr-0">
                     <div className="lg:hidden">
                         <h2 className="text-3xl font-black uppercase leading-[0.95] tracking-tighter text-foreground sm:text-4xl md:text-5xl">
-                            {PROJECTS_HOME_CONTENT.mobileTitle}
+                            {content.projectsHome.mobileTitle}
                         </h2>
                         <p className="mt-5 max-w-2xl text-sm leading-relaxed text-foreground/55 sm:text-base md:text-lg">
-                            {PROJECTS_HOME_CONTENT.mobileDescription}
+                            {content.projectsHome.mobileDescription}
                         </p>
 
                         <div className="mt-12 flex flex-col gap-14 sm:mt-14 sm:gap-16 md:gap-20">
@@ -437,7 +443,7 @@ export default function Projects() {
                                 href="/projects"
                                 className="inline-flex items-center gap-3 bg-foreground px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-background transition-colors hover:bg-foreground/85"
                             >
-                                {PROJECTS_HOME_CONTENT.viewAllLabel}
+                                {content.projectsHome.viewAllLabel}
                             </Link>
                         </div>
                     </div>
@@ -445,15 +451,15 @@ export default function Projects() {
                     <div className="hidden gap-8 lg:flex lg:flex-row lg:items-start lg:gap-10 xl:gap-14">
                         <div className="flex w-full shrink-0 flex-col lg:w-[min(100%,320px)] xl:w-[360px]">
                             <span className="mb-3 block font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/45">
-                                {PROJECTS_HOME_CONTENT.desktopEyebrow}
+                                {content.projectsHome.desktopEyebrow}
                             </span>
                             <h2 className="text-3xl font-black uppercase leading-[0.95] tracking-tighter text-foreground sm:text-4xl lg:text-5xl">
-                                {PROJECTS_HOME_CONTENT.desktopTitleLine1}
+                                {content.projectsHome.desktopTitleLine1}
                                 <br />
-                                {PROJECTS_HOME_CONTENT.desktopTitleLine2}
+                                {content.projectsHome.desktopTitleLine2}
                             </h2>
                             <p className="mt-5 max-w-sm text-sm leading-relaxed text-foreground/55 sm:text-base">
-                                {PROJECTS_HOME_CONTENT.desktopDescription}
+                                {content.projectsHome.desktopDescription}
                             </p>
 
                             <div className="mt-8 flex flex-col gap-3 sm:mt-10">
@@ -531,7 +537,7 @@ export default function Projects() {
                                     href="/projects"
                                     className="inline-flex items-center gap-3 bg-foreground px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-background transition-colors hover:bg-foreground/85"
                                 >
-                                    {PROJECTS_HOME_CONTENT.viewAllLabel}
+                                    {content.projectsHome.viewAllLabel}
                                 </Link>
                             </div>
                         </div>
@@ -540,11 +546,13 @@ export default function Projects() {
                             <ProjectsDesktopGallery
                                 viewportRef={viewportRef}
                                 trackRef={trackRef}
-                                featured={featured}
-                                activeIndex={activeIndex}
-                                viewportShell={viewportShell}
-                                goToProject={goToProject}
-                            />
+                                    featured={featured}
+                                    activeIndex={activeIndex}
+                                    viewportShell={viewportShell}
+                                    goToProject={goToProject}
+                                    srProgressText={srProgressText}
+                                    scrubHint={content.projectsHome.scrubHint}
+                                />
                         </div>
                     </div>
                 </div>

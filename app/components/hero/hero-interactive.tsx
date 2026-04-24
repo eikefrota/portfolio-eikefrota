@@ -5,17 +5,54 @@ import Link from "next/link";
 import { m, type Variants } from "framer-motion";
 import { ArrowDownRight } from "lucide-react";
 import { useHydrationSafeReducedMotion } from "@/app/hooks/use-hydration-safe-reduced-motion";
-import {
-    HERO_AVAILABILITY_LABEL,
-    HERO_EXPLORE_LABEL,
-    HERO_STACK_LINKS,
-} from "@/app/data/site-content";
+import { useSiteLanguage } from "@/app/components/language-provider";
 import { cn } from "@/lib/utils";
 
 /** Local origin keeps compositing cheap; enter uses translate only (no scale). */
 export const HERO_MOTION_ORIGIN: React.CSSProperties = {
     transformOrigin: "center",
 };
+
+type LenisLike = {
+    scrollTo: (
+        target: number | string | HTMLElement,
+        options?: {
+            duration?: number;
+            easing?: (t: number) => number;
+            immediate?: boolean;
+            offset?: number;
+        },
+    ) => void;
+};
+
+type WindowWithLenis = Window & { lenis?: LenisLike };
+
+function smoothScrollToY(targetY: number, durationMs: number): void {
+    const startY = window.scrollY;
+    const deltaY = targetY - startY;
+
+    if (Math.abs(deltaY) < 2) {
+        window.scrollTo({ top: targetY });
+        return;
+    }
+
+    const startedAt = performance.now();
+    const easeInOutCubic = (t: number) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    const tick = (now: number) => {
+        const elapsed = now - startedAt;
+        const progress = Math.min(elapsed / durationMs, 1);
+        const eased = easeInOutCubic(progress);
+        window.scrollTo({ top: startY + deltaY * eased });
+
+        if (progress < 1) {
+            window.requestAnimationFrame(tick);
+        }
+    };
+
+    window.requestAnimationFrame(tick);
+}
 
 export type HeroEnterDrift = "left" | "right" | "center";
 
@@ -250,9 +287,11 @@ export function HeroInteractivePortrait({
 }
 
 export function HeroTechChips(): React.JSX.Element {
+    const { content } = useSiteLanguage();
+
     return (
         <div className="flex flex-wrap gap-2">
-            {HERO_STACK_LINKS.map((item) => (
+            {content.hero.stackLinks.map((item) => (
                 <Link
                     key={item.label}
                     href={item.href}
@@ -273,6 +312,7 @@ export function HeroTechChips(): React.JSX.Element {
 
 export function HeroAvailability(): React.JSX.Element {
     const reduceMotion = useHydrationSafeReducedMotion();
+    const { content } = useSiteLanguage();
 
     return (
         <div
@@ -284,8 +324,8 @@ export function HeroAvailability(): React.JSX.Element {
                 ) : null}
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-600/90" />
             </span>
-            <span className="text-[9px] font-mono uppercase leading-tight tracking-[0.18em] text-foreground/58">
-                {HERO_AVAILABILITY_LABEL}
+            <span className="text-[10px] font-mono uppercase leading-tight tracking-[0.18em] text-foreground/58">
+                {content.hero.availabilityLabel}
             </span>
         </div>
     );
@@ -293,11 +333,57 @@ export function HeroAvailability(): React.JSX.Element {
 
 export function HeroExploreLink({ className }: { className?: string }): React.JSX.Element {
     const reduceMotion = useHydrationSafeReducedMotion();
+    const { content } = useSiteLanguage();
+
+    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        if (
+            event.defaultPrevented ||
+            event.button !== 0 ||
+            event.metaKey ||
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const target = document.getElementById("projects");
+        if (!target) return;
+
+        const headerHeightRaw = getComputedStyle(document.documentElement)
+            .getPropertyValue("--app-header-h")
+            .trim()
+            .replace("px", "");
+        const headerHeight = Number.parseFloat(headerHeightRaw) || 0;
+        const targetY = Math.max(
+            target.getBoundingClientRect().top + window.scrollY - headerHeight - 16,
+            0,
+        );
+
+        if (reduceMotion) {
+            window.scrollTo({ top: targetY });
+            return;
+        }
+
+        const lenis = (window as WindowWithLenis).lenis;
+        if (lenis) {
+            lenis.scrollTo(targetY, {
+                duration: 2.4,
+                easing: (t) => 1 - Math.pow(1 - t, 3),
+            });
+            return;
+        }
+
+        smoothScrollToY(targetY, 2200);
+    };
 
     return (
         <div className={className}>
             <Link
                 href="#projects"
+                onClick={handleClick}
                 className={cn(
                     "group inline-flex items-center gap-2 rounded-full border border-border bg-transparent",
                     "px-3 py-2 text-[10px] font-mono uppercase tracking-[0.24em] text-foreground/70",
@@ -306,7 +392,7 @@ export function HeroExploreLink({ className }: { className?: string }): React.JS
                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 )}
             >
-                <span>{HERO_EXPLORE_LABEL}</span>
+                <span>{content.hero.exploreLabel}</span>
                 {!reduceMotion ? (
                     <span className="hero-explore-arrow-nudge inline-flex" aria-hidden>
                         <ArrowDownRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5" />

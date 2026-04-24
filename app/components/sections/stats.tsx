@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ABOUT_CONTENT, TECH_STACKS } from "@/app/data/site-content";
+import { useSiteLanguage } from "@/app/components/language-provider";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -12,6 +12,7 @@ if (typeof window !== "undefined") {
 
 export default function Stats() {
     const sectionRef = useRef<HTMLElement>(null);
+    const { content } = useSiteLanguage();
 
     useEffect(() => {
         if (!sectionRef.current) return;
@@ -104,16 +105,16 @@ export default function Stats() {
                     <div className="stats-panel-left w-full min-w-0 max-w-full lg:w-[42%] lg:max-w-none xl:w-5/12 space-y-4 sm:space-y-5 md:space-y-6">
                         <div className="flex min-w-0 items-center gap-2 sm:gap-3">
                             <span className="stats-anim shrink-0 font-mono text-[9px] uppercase tracking-[0.28em] text-foreground/55 min-[375px]:text-[10px] sm:text-xs sm:tracking-[0.35em]">
-                                {ABOUT_CONTENT.label}
+                                {content.about.label}
                             </span>
                             <div className="h-px min-w-0 flex-1 bg-border" />
                         </div>
 
                         <h2 className="stats-anim wrap-anywhere text-[clamp(1.625rem,calc(0.9rem+4.2vw),5rem)] font-black uppercase leading-[0.95] tracking-tight text-foreground">
-                            {ABOUT_CONTENT.title}
+                            {content.about.title}
                         </h2>
 
-                        {ABOUT_CONTENT.paragraphs.map((paragraph, index) => (
+                        {content.about.paragraphs.map((paragraph, index) => (
                             <p
                                 key={paragraph}
                                 className={`stats-anim max-w-full leading-relaxed wrap-anywhere sm:max-w-lg ${
@@ -129,7 +130,7 @@ export default function Stats() {
 
                     <div className="stats-panel-right w-full min-w-0 max-w-full lg:w-[58%] lg:max-w-none xl:w-7/12 lg:self-center">
                         <div className="grid gap-6 sm:gap-8 md:gap-10 lg:gap-12">
-                            {TECH_STACKS.map((group) => (
+                            {content.techStacks.map((group) => (
                                 <div
                                     key={group.label}
                                     className="grid min-w-0 grid-cols-1 min-[480px]:grid-cols-12 items-start sm:items-center gap-4 min-[480px]:gap-5 sm:gap-6 md:gap-8"

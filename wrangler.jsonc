@@ -1,5 +1,5 @@
 {
-  "name": "eikefrota",
+  "name": "portfolio-eikefrota",
   "compatibility_date": "2026-03-18",
   "assets": {
     "directory": "./out"
@@ -7,7 +7,7 @@
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "eikefrota"
+      "service": "portfolio-eikefrota"
     }
   ]
 }

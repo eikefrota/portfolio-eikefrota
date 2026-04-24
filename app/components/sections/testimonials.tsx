@@ -5,7 +5,7 @@ import { useGSAP } from "@/app/hooks/useGSAP";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Quote } from "lucide-react";
-import { TESTIMONIALS_CONTENT } from "@/app/data/site-content";
+import { useSiteLanguage } from "@/app/components/language-provider";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -13,11 +13,12 @@ if (typeof window !== "undefined") {
 
 export default function Testimonials() {
     const sliderRef = useRef<HTMLDivElement>(null);
+    const { content } = useSiteLanguage();
     const loopedTestimonials = [
-        ...TESTIMONIALS_CONTENT.items,
-        ...TESTIMONIALS_CONTENT.items,
-        ...TESTIMONIALS_CONTENT.items,
-        ...TESTIMONIALS_CONTENT.items,
+        ...content.testimonials.items,
+        ...content.testimonials.items,
+        ...content.testimonials.items,
+        ...content.testimonials.items,
     ];
 
     const containerRef = useGSAP(() => {
@@ -57,13 +58,13 @@ export default function Testimonials() {
             <div className="max-w-[1920px] mx-auto px-4 sm:px-6 md:px-12 lg:px-20 mb-20">
                 <div className="flex flex-col gap-4">
                     <span className="testimonial-header text-xs uppercase tracking-[0.3em] text-foreground/45 font-medium">
-                        {TESTIMONIALS_CONTENT.label}
+                        {content.testimonials.label}
                     </span>
                     <h2 className="testimonial-header text-[clamp(2.5rem,6vw,6rem)] font-black uppercase leading-[0.9] text-foreground">
-                        {TESTIMONIALS_CONTENT.titleLine1} <br /> {TESTIMONIALS_CONTENT.titleLine2}
+                        {content.testimonials.titleLine1} <br /> {content.testimonials.titleLine2}
                     </h2>
                     <p className="testimonial-header max-w-2xl text-sm leading-relaxed text-foreground/45 sm:text-base">
-                        {TESTIMONIALS_CONTENT.note}
+                        {content.testimonials.note}
                     </p>
                 </div>
             </div>
@@ -96,7 +97,7 @@ export default function Testimonials() {
                                             {testimonial.company}
                                         </p>
                                     </div>
-                                    <div className="ml-auto flex gap-0.5 opacity-50" aria-label={`${testimonial.rating} of 5`}>
+                                    <div className="ml-auto flex gap-0.5 opacity-50" aria-label={`${testimonial.rating} ${content.testimonials.ratingLabel}`}>
                                         {Array.from({ length: testimonial.rating }).map((_, i) => (
                                             <span key={i} className="text-foreground text-[10px]">
                                                 *

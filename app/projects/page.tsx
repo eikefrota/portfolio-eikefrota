@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { projects, type Project } from "@/app/data/projects";
-import { PROJECTS_PAGE_CONTENT } from "@/app/data/site-content";
+import { type Project } from "@/app/data/projects";
+import { useSiteLanguage } from "@/app/components/language-provider";
 import { releaseDocumentScroll } from "@/app/utils/release-document-scroll";
 import { prefersHardNavigationToProjectDetail, projectDetailPath } from "@/app/utils/project-detail-navigation";
 
@@ -22,12 +22,16 @@ type ProjectGridCardProps = {
     project: Project;
     index: number;
     onSelect: (slug: string) => void;
+    featuredBadge: string;
+    cardCta: string;
 };
 
 const ProjectGridCard = memo(function ProjectGridCard({
     project,
     index,
     onSelect,
+    featuredBadge,
+    cardCta,
 }: ProjectGridCardProps) {
     return (
         <article
@@ -60,7 +64,7 @@ const ProjectGridCard = memo(function ProjectGridCard({
                     </span>
                     {project.featured ? (
                         <span className="rounded-sm border border-border bg-muted/80 px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest text-foreground/50 sm:text-[10px]">
-                            Featured
+                            {featuredBadge}
                         </span>
                     ) : null}
                 </div>
@@ -74,7 +78,7 @@ const ProjectGridCard = memo(function ProjectGridCard({
                     {project.description}
                 </p>
                 <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-foreground/35 sm:text-[11px]">
-                    {PROJECTS_PAGE_CONTENT.cardCta}
+                    {cardCta}
                 </p>
             </button>
         </article>
@@ -83,6 +87,7 @@ const ProjectGridCard = memo(function ProjectGridCard({
 
 export default function ProjectsPage() {
     const router = useRouter();
+    const { content, projects } = useSiteLanguage();
     const [isNavigating, setIsNavigating] = useState(false);
     const [transitionKey, setTransitionKey] = useState(0);
     const navTimeoutRef = useRef<number | null>(null);
@@ -153,26 +158,26 @@ export default function ProjectsPage() {
 
             <section
                 className="projects-page-section mx-auto max-w-[1920px] px-5 py-14 sm:px-8 sm:py-16 md:px-12 md:py-20 lg:px-16 lg:py-24 xl:px-24"
-                aria-label="All projects"
+                aria-label={content.projectsPage.pageAriaLabel}
             >
                 <header className="mb-10 max-w-2xl md:mb-14 lg:mb-16">
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                         <span className="font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/45 sm:text-[11px]">
-                            {PROJECTS_PAGE_CONTENT.eyebrow}
+                            {content.projectsPage.eyebrow}
                         </span>
                         <span className="hidden h-px w-8 bg-border sm:block" aria-hidden />
                         <Link
                             href="/"
                             className="font-mono text-[10px] uppercase tracking-[0.24em] text-foreground/40 transition-colors hover:text-foreground/70 sm:text-[11px]"
                         >
-                            {PROJECTS_PAGE_CONTENT.backHomeLabel}
+                            {content.projectsPage.backHomeLabel}
                         </Link>
                     </div>
                     <h1 className="mt-4 text-3xl font-black uppercase leading-[0.95] tracking-tighter text-foreground sm:mt-5 sm:text-4xl md:text-5xl lg:text-6xl">
-                        {PROJECTS_PAGE_CONTENT.title}
+                        {content.projectsPage.title}
                     </h1>
                     <p className="mt-5 text-sm leading-relaxed text-foreground/55 sm:text-base md:text-lg">
-                        {PROJECTS_PAGE_CONTENT.description}
+                        {content.projectsPage.description}
                     </p>
                 </header>
 
@@ -183,6 +188,8 @@ export default function ProjectsPage() {
                             project={project}
                             index={index}
                             onSelect={navigateToProject}
+                            featuredBadge={content.projectsPage.featuredBadge}
+                            cardCta={content.projectsPage.cardCta}
                         />
                     ))}
                 </div>

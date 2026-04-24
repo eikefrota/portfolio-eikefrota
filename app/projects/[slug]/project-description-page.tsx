@@ -1,15 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactElement, ReactNode } from "react";
-import type { Project } from "@/app/data/projects";
-import { PROJECT_DETAIL_CONTENT } from "@/app/data/site-content";
+import { notFound } from "next/navigation";
+import { getProjectBySlug } from "@/app/data/projects";
+import { useSiteLanguage } from "@/app/components/language-provider";
 import ProjectPageEnter from "@/app/components/project-page-enter";
 
 type ProjectDescriptionPageProps = {
-    project: Project;
+    slug: string;
 };
 
-function splitDescription(description: string): { lead: string; rest: string } {
+function splitDescription(
+    description: string,
+    fallbackLead: string,
+): { lead: string; rest: string } {
     const trimmed = description.trim();
     const match = trimmed.match(/^(.+?[.!?])(\s+|$)/);
     if (match && match[1].length <= 160 && match[1].length >= 16) {
@@ -18,7 +24,7 @@ function splitDescription(description: string): { lead: string; rest: string } {
             rest: trimmed.slice(match[0].length).trim(),
         };
     }
-    return { lead: "Project overview", rest: trimmed };
+    return { lead: fallbackLead, rest: trimmed };
 }
 
 function MetaRow({ label, value }: { label: string; value: string }): ReactElement {
@@ -44,7 +50,7 @@ function ExternalInlineLink({
     if (!href) {
         return (
             <span className="mt-5 inline-block border-b border-foreground/10 pb-0.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground/50 sm:text-xs">
-                {PROJECT_DETAIL_CONTENT.unavailableInlineLabel}
+                {children}
             </span>
         );
     }
@@ -78,7 +84,7 @@ function ExternalButton({
     if (!href) {
         return (
             <span className={`${className} cursor-default opacity-45`}>
-                {PROJECT_DETAIL_CONTENT.unavailableButtonLabel}
+                {children}
             </span>
         );
     }
@@ -91,9 +97,19 @@ function ExternalButton({
 }
 
 export default function ProjectDescriptionPage({
-    project,
+    slug,
 }: ProjectDescriptionPageProps): ReactElement {
-    const { lead, rest } = splitDescription(project.description);
+    const { content, locale } = useSiteLanguage();
+    const project = getProjectBySlug(slug, locale);
+
+    if (!project) {
+        notFound();
+    }
+
+    const { lead, rest } = splitDescription(
+        project.description,
+        content.projectDetail.defaultLead,
+    );
     const techLine = project.tech.join(" | ");
 
     return (
@@ -122,7 +138,7 @@ export default function ProjectDescriptionPage({
                                     href="/projects"
                                     className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/85 transition-colors hover:text-white sm:text-[11px]"
                                 >
-                                    {PROJECT_DETAIL_CONTENT.allProjectsLabel}
+                                    {content.projectDetail.allProjectsLabel}
                                 </Link>
                                 <span className="text-white/35" aria-hidden>
                                     /
@@ -131,7 +147,7 @@ export default function ProjectDescriptionPage({
                                     href="/"
                                     className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/85 transition-colors hover:text-white sm:text-[11px]"
                                 >
-                                    {PROJECT_DETAIL_CONTENT.homeLabel}
+                                    {content.projectDetail.homeLabel}
                                 </Link>
                             </div>
                             <a
@@ -140,13 +156,13 @@ export default function ProjectDescriptionPage({
                                 rel="noopener noreferrer"
                                 className="rounded-full border border-white/35 bg-black/20 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm transition-colors hover:border-white/55 hover:bg-black/35 sm:text-[10px]"
                             >
-                                {PROJECT_DETAIL_CONTENT.openImageLabel}
+                                {content.projectDetail.openImageLabel}
                             </a>
                         </div>
 
                         <div className="flex flex-1 flex-col items-center justify-center px-5 pb-28 pt-8 sm:px-8 sm:pb-32 md:px-12">
                             <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.35em] text-white/60 sm:text-[11px]">
-                                {PROJECT_DETAIL_CONTENT.caseStudyLabel} - {project.year}
+                                {content.projectDetail.caseStudyLabel} - {project.year}
                             </p>
                             <h1 className="max-w-[min(100%,56rem)] text-center text-[clamp(1.75rem,5vw,4rem)] font-black uppercase leading-[0.95] tracking-tighter text-white drop-shadow-[0_2px_24px_rgb(0_0_0/0.35)] text-balance">
                                 {project.title}
@@ -155,7 +171,7 @@ export default function ProjectDescriptionPage({
 
                         <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 sm:bottom-8">
                             <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-white/65 sm:text-[10px]">
-                                Scroll
+                                {content.projectDetail.heroScrollLabel}
                             </span>
                             <span
                                 className="h-8 w-px animate-pulse bg-linear-to-b from-white/0 via-white/70 to-white/0 sm:h-10"
@@ -165,7 +181,7 @@ export default function ProjectDescriptionPage({
                     </div>
                 </section>
 
-                <section className="border-t border-border bg-background" aria-label="Project details">
+                <section className="border-t border-border bg-background" aria-label={content.projectDetail.detailsSectionAriaLabel}>
                     <div className="mx-auto max-w-[1920px] px-5 py-14 sm:px-8 sm:py-16 md:px-12 md:py-20 lg:px-16 lg:py-24 xl:px-24">
                         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16 xl:gap-20">
                             <div className="lg:col-span-5 xl:col-span-4">
@@ -173,22 +189,28 @@ export default function ProjectDescriptionPage({
                                     {project.title}
                                 </p>
                                 <ExternalInlineLink href={project.live}>
-                                    {PROJECT_DETAIL_CONTENT.viewLiveSiteLabel}
+                                    {project.live
+                                        ? content.projectDetail.viewLiveSiteLabel
+                                        : content.projectDetail.unavailableInlineLabel}
                                 </ExternalInlineLink>
 
                                 <dl className="mt-10 sm:mt-12">
-                                    <MetaRow label="Year" value={project.year} />
-                                    <MetaRow label="Role" value={project.role} />
-                                    <MetaRow label="Tech stack" value={techLine || "-"} />
-                                    <MetaRow label="Status" value={project.status} />
+                                    <MetaRow label={content.projectDetail.meta.year} value={project.year} />
+                                    <MetaRow label={content.projectDetail.meta.role} value={project.role} />
+                                    <MetaRow label={content.projectDetail.meta.techStack} value={techLine || "-"} />
+                                    <MetaRow label={content.projectDetail.meta.status} value={project.status} />
                                 </dl>
 
                                 <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
                                     <ExternalButton href={project.github} variant="secondary">
-                                        {PROJECT_DETAIL_CONTENT.viewSourceLabel}
+                                        {project.github
+                                            ? content.projectDetail.viewSourceLabel
+                                            : content.projectDetail.unavailableButtonLabel}
                                     </ExternalButton>
                                     <ExternalButton href={project.live} variant="primary">
-                                        {PROJECT_DETAIL_CONTENT.liveDemoLabel}
+                                        {project.live
+                                            ? content.projectDetail.liveDemoLabel
+                                            : content.projectDetail.unavailableButtonLabel}
                                     </ExternalButton>
                                 </div>
                             </div>
@@ -207,10 +229,10 @@ export default function ProjectDescriptionPage({
                         <div className="mt-16 grid grid-cols-1 gap-6 border-t border-border pt-14 sm:mt-20 sm:gap-8 sm:pt-16 md:mt-24 md:pt-20 lg:grid-cols-12 lg:gap-12">
                             <div className="lg:col-span-5 xl:col-span-4">
                                 <h2 className="font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground sm:text-[11px]">
-                                    {PROJECT_DETAIL_CONTENT.highlightsLabel}
+                                    {content.projectDetail.highlightsLabel}
                                 </h2>
                                 <p className="mt-4 text-xl font-black uppercase leading-tight tracking-tight text-foreground sm:text-2xl md:text-3xl wrap-break-word">
-                                    {PROJECT_DETAIL_CONTENT.highlightsTitle}
+                                    {content.projectDetail.highlightsTitle}
                                 </p>
                             </div>
                             <div className="min-w-0 lg:col-span-7 xl:col-span-8">

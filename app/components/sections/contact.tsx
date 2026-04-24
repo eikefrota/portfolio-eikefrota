@@ -3,23 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Mail, Github, Linkedin, Instagram, ArrowUpRight, Copy, Check } from "lucide-react";
-import { CONTACT_CONTENT, SITE_IDENTITY } from "@/app/data/site-content";
+import { Mail, ArrowUpRight, Copy, Check } from "lucide-react";
+import { SITE_IDENTITY } from "@/app/data/site-content";
+import { useSiteLanguage } from "@/app/components/language-provider";
+import { socialIconFor } from "@/app/components/social-icon";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
 
-const socialIconMap = {
-    GitHub: Github,
-    LinkedIn: Linkedin,
-    Instagram: Instagram,
-} as const;
-
 export default function Contact() {
     const [copied, setCopied] = useState(false);
     const containerRef = useRef<HTMLElement>(null);
     const emailRef = useRef<HTMLAnchorElement>(null);
+    const { content } = useSiteLanguage();
 
     const copyEmail = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -107,41 +104,40 @@ export default function Contact() {
                         <div className="space-y-2 overflow-hidden">
                             <div className="overflow-hidden">
                                 <span className="contact-header-text block text-xs uppercase tracking-[0.3em] text-foreground/45 font-medium mb-4">
-                                    {CONTACT_CONTENT.label}
+                                    {content.contact.label}
                                 </span>
                             </div>
                             <div className="overflow-hidden">
                                 <h2 className="contact-header-text block text-[clamp(3.5rem,9vw,8rem)] font-black uppercase leading-[0.9] text-foreground">
-                                    {CONTACT_CONTENT.titleLine1}
+                                    {content.contact.titleLine1}
                                 </h2>
                             </div>
                             <div className="overflow-hidden">
                                 <h2 className="contact-header-text block text-[clamp(3.5rem,9vw,8rem)] font-black uppercase leading-[0.9] text-foreground/30">
-                                    {CONTACT_CONTENT.titleLine2}
+                                    {content.contact.titleLine2}
                                 </h2>
                             </div>
                         </div>
 
                         <div className="space-y-8 max-w-md">
                             <p className="contact-content text-lg text-foreground/65 leading-relaxed font-light">
-                                {CONTACT_CONTENT.description}
+                                {content.contact.description}
                             </p>
 
                             <div className="contact-content flex gap-4">
-                                {CONTACT_CONTENT.socials.map((link) => {
-                                    const Icon = socialIconMap[link.name as keyof typeof socialIconMap];
-                                    if (!Icon) return null;
-
+                                {content.contact.socials.map((link) => {
                                     return (
                                         <a
                                             key={link.name}
-                                            href={link.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                            href={link.url ?? undefined}
+                                            target={link.url?.startsWith("mailto:") ? undefined : "_blank"}
+                                            rel={link.url?.startsWith("mailto:") ? undefined : "noopener noreferrer"}
                                             className="group flex items-center justify-center w-12 h-12 rounded-full border border-border bg-muted/30 hover:bg-foreground hover:border-transparent transition-all duration-300"
                                             aria-label={link.name}
                                         >
-                                            <Icon className="w-5 h-5 text-foreground/60 group-hover:text-background transition-colors duration-300" />
+                                            <span className="text-foreground/60 group-hover:text-background transition-colors duration-300">
+                                                {socialIconFor(link.name)}
+                                            </span>
                                         </a>
                                     );
                                 })}
@@ -166,7 +162,7 @@ export default function Contact() {
                                 </div>
 
                                 <div>
-                                    <span className="text-xs uppercase tracking-[0.2em] text-foreground/45 mb-4 block">Drop me a line</span>
+                                    <span className="text-xs uppercase tracking-[0.2em] text-foreground/45 mb-4 block">{content.contact.emailPrompt}</span>
                                     <h3 className="flex flex-col text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-black uppercase text-foreground mb-8 leading-[0.9]">
                                         <span>{SITE_IDENTITY.emailUser}</span>
                                         <span className="text-foreground/50">{SITE_IDENTITY.emailDomain}</span>
@@ -179,12 +175,12 @@ export default function Contact() {
                                         {copied ? (
                                             <>
                                                 <Check className="w-4 h-4 text-green-400" />
-                                                <span className="text-green-400">Email Copied</span>
+                                                <span className="text-green-400">{content.contact.emailCopied}</span>
                                             </>
                                         ) : (
                                             <>
                                                 <Copy className="w-4 h-4" />
-                                                <span className="group-hover/btn:underline decoration-foreground/30 underline-offset-4">Copy Address</span>
+                                                <span className="group-hover/btn:underline decoration-foreground/30 underline-offset-4">{content.contact.copyAddress}</span>
                                             </>
                                         )}
                                     </button>

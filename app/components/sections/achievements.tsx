@@ -5,7 +5,7 @@ import { useGSAP } from "@/app/hooks/useGSAP";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Briefcase, GraduationCap, Code, Sparkles } from "lucide-react";
-import { ACHIEVEMENTS_CONTENT } from "@/app/data/site-content";
+import { useSiteLanguage } from "@/app/components/language-provider";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -20,6 +20,7 @@ const iconMap = {
 
 export default function Achievements() {
     const sectionRef = useRef<HTMLElement>(null);
+    const { content } = useSiteLanguage();
 
     useGSAP(() => {
         const isDesktop = window.innerWidth >= 1024;
@@ -38,7 +39,7 @@ export default function Achievements() {
         }
 
         if (isDesktop) {
-            ACHIEVEMENTS_CONTENT.items.forEach((_, i) => {
+            content.achievements.items.forEach((_, i) => {
                 gsap.from(`.achievement-card-${i}`, {
                     scrollTrigger: {
                         trigger: `.achievement-card-${i}`,
@@ -68,25 +69,25 @@ export default function Achievements() {
                 ease: "power2.out",
             });
         }
-    }, []);
+    }, [content.achievements.items]);
 
     return (
         <section ref={sectionRef} className="achievements-section relative bg-background overflow-hidden py-16 sm:py-20 lg:py-28">
             <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-20 xl:px-32">
                 <div className="achievements-header mb-10 md:mb-14 lg:mb-16">
                     <span className="text-[10px] uppercase tracking-[0.3em] font-mono text-foreground/45 mb-3 block">
-                        {ACHIEVEMENTS_CONTENT.label}
+                        {content.achievements.label}
                     </span>
                     <h2 className="text-3xl md:text-5xl lg:text-7xl font-black text-foreground uppercase leading-[0.9] tracking-tighter italic mb-4">
-                        {ACHIEVEMENTS_CONTENT.title}
+                        {content.achievements.title}
                     </h2>
                     <p className="text-foreground/55 text-sm md:text-lg italic leading-relaxed max-w-2xl">
-                        {ACHIEVEMENTS_CONTENT.description}
+                        {content.achievements.description}
                     </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 md:gap-6 lg:gap-8">
-                    {ACHIEVEMENTS_CONTENT.items.map((achievement, index) => {
+                    {content.achievements.items.map((achievement, index) => {
                         const Icon = iconMap[achievement.icon as keyof typeof iconMap] ?? Code;
 
                         return (

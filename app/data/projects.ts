@@ -1,4 +1,4 @@
-import { PROJECT_DESCRIPTIONS } from "./project-descriptions";
+import { DEFAULT_SITE_LOCALE, type SiteLocale } from "./site-content";
 
 export type Project = {
     slug: string;
@@ -15,75 +15,164 @@ export type Project = {
     status: string;
 };
 
-type ProjectCore = Omit<Project, "description">;
+type LocalizedText = Record<SiteLocale, string>;
 
-const projectCoreList: readonly ProjectCore[] = [
+type ProjectDefinition = {
+    slug: string;
+    title: string;
+    role: LocalizedText;
+    description: LocalizedText;
+    highlights: Record<SiteLocale, readonly string[]>;
+    tech: readonly string[];
+    github: string | null;
+    live: string | null;
+    featured: boolean;
+    year: string;
+    image: string;
+    status: LocalizedText;
+};
+
+const projectDefinitions: readonly ProjectDefinition[] = [
     {
         slug: "quizdev",
         title: "QuizDev",
-        role: "Full Stack Development",
-        highlights: [
-            "Built a mobile-first interactive experience with React Native and Expo.",
-            "Connected application flow to backend logic and persisted data with PostgreSQL.",
-            "Focused on navigation, question flow, and a compact full stack architecture.",
-            "Shows range beyond browser-based interfaces while keeping product clarity central.",
-        ],
+        role: {
+            en: "Full Stack Development",
+            "pt-BR": "Desenvolvimento Full Stack",
+        },
+        description: {
+            en: "I built QuizDev as a mobile-first full stack experience that brings together React Native, backend logic, and persisted data in a compact product flow.",
+            "pt-BR":
+                "Desenvolvi o QuizDev como uma experiência full stack mobile-first, unindo React Native, lógica de backend e persistência de dados em um fluxo de produto enxuto.",
+        },
+        highlights: {
+            en: [
+                "I built the mobile-first interface with React Native and Expo.",
+                "I connected the quiz flow to backend logic and persisted data with PostgreSQL.",
+                "I structured navigation, question progression, and feedback to keep the experience clear and direct.",
+                "It shows how I work beyond browser-based interfaces without losing product clarity.",
+            ],
+            "pt-BR": [
+                "Desenvolvi a interface mobile-first com React Native e Expo.",
+                "Conectei o fluxo do quiz à lógica de backend e à persistência de dados com PostgreSQL.",
+                "Estruturei navegação, progressão das perguntas e feedback para manter a experiência clara e direta.",
+                "O projeto mostra como trabalho além da web sem perder clareza de produto.",
+            ],
+        },
         tech: ["React Native", "Node.js", "PostgreSQL", "Expo"],
         github: "https://github.com/eikefrota/quiz-dev",
         live: null,
         featured: true,
         year: "2025",
         image: "/images/projects/quizdev.webp",
-        status: "Public code",
+        status: {
+            en: "Public repository",
+            "pt-BR": "Repositório público",
+        },
     },
     {
         slug: "fastdish",
         title: "FastDish",
-        role: "Frontend Development",
-        highlights: [
-            "Designed a web ordering experience around fast reading, simple navigation, and responsive behavior.",
-            "Used React and Vite to keep implementation lightweight and direct.",
-            "Prioritized visual hierarchy and task-oriented flow instead of decorative complexity.",
-            "Acts as a clear proof of UI execution and frontend decision-making.",
-        ],
+        role: {
+            en: "Frontend Development",
+            "pt-BR": "Desenvolvimento Frontend",
+        },
+        description: {
+            en: "I built FastDish as a responsive ordering interface focused on fast reading, direct navigation, and a lightweight experience.",
+            "pt-BR":
+                "Desenvolvi o FastDish como uma interface responsiva de pedidos, com foco em leitura rápida, navegação direta e uma experiência leve.",
+        },
+        highlights: {
+            en: [
+                "I designed the ordering flow around quick scanning, simple navigation, and responsive behavior.",
+                "I used React and Vite to keep the implementation lean and straightforward.",
+                "I prioritized visual hierarchy and task-oriented flow instead of decorative complexity.",
+                "It works as a clear example of my frontend execution and interface decision-making.",
+            ],
+            "pt-BR": [
+                "Desenhei o fluxo de pedidos para facilitar leitura rápida, navegação simples e comportamento responsivo.",
+                "Usei React e Vite para manter a implementação enxuta e direta.",
+                "Priorizei hierarquia visual e fluxo orientado à tarefa em vez de complexidade decorativa.",
+                "Ele funciona como um exemplo claro da minha execução em frontend e das decisões de interface que tomo.",
+            ],
+        },
         tech: ["React", "Vite", "JavaScript", "CSS"],
         github: "https://github.com/eikefrota/fastdish",
         live: "https://fastdish.vercel.app/",
         featured: true,
         year: "2025",
         image: "/images/projects/fastdish.webp",
-        status: "Live demo",
+        status: {
+            en: "Live demo",
+            "pt-BR": "Demo online",
+        },
     },
     {
         slug: "frotas-gourmet",
         title: "Frota's Gourmet",
-        role: "Frontend Development",
-        highlights: [
-            "Created a digital menu focused on fast reading, mobile clarity, and direct conversion.",
-            "Structured categories and pricing to work well on smaller screens.",
-            "Used a lean stack to ship a clear and lightweight experience.",
-            "Works as a practical example of interface organization with commercial intent.",
-        ],
+        role: {
+            en: "Frontend Development",
+            "pt-BR": "Desenvolvimento Frontend",
+        },
+        description: {
+            en: "I designed Frota's Gourmet as a digital menu experience centered on mobile clarity, direct conversion, and organized information.",
+            "pt-BR":
+                "Desenhei o Frota's Gourmet como uma experiência de cardápio digital pensada para clareza no mobile, conversão direta e informação bem organizada.",
+        },
+        highlights: {
+            en: [
+                "I created the menu around fast reading, mobile clarity, and direct conversion.",
+                "I organized categories and pricing to work well on smaller screens.",
+                "I used a lean stack to ship a clear and lightweight experience.",
+                "It is a practical example of how I organize interfaces with commercial intent.",
+            ],
+            "pt-BR": [
+                "Criei o cardápio com foco em leitura rápida, clareza no mobile e conversão direta.",
+                "Organizei categorias e preços para funcionar bem em telas menores.",
+                "Usei uma stack enxuta para entregar uma experiência clara e leve.",
+                "Ele é um exemplo prático de como organizo interfaces com intenção comercial.",
+            ],
+        },
         tech: ["HTML5", "JavaScript", "Tailwind CSS"],
         github: "https://github.com/eikefrota/frota-gourmet",
         live: "https://frotagourmet.netlify.app",
         featured: true,
         year: "2024",
         image: "/images/projects/frotas-gourmet.webp",
-        status: "Live demo",
+        status: {
+            en: "Live demo",
+            "pt-BR": "Demo online",
+        },
     },
 ];
 
-function attachDescription(core: ProjectCore): Project {
-    const description = PROJECT_DESCRIPTIONS[core.slug];
-    if (description === undefined) {
-        throw new Error(`Missing PROJECT_DESCRIPTIONS entry for slug: ${core.slug}`);
-    }
-    return { ...core, description };
+function toProject(definition: ProjectDefinition, locale: SiteLocale): Project {
+    return {
+        slug: definition.slug,
+        title: definition.title,
+        role: definition.role[locale],
+        description: definition.description[locale],
+        highlights: definition.highlights[locale],
+        tech: definition.tech,
+        github: definition.github,
+        live: definition.live,
+        featured: definition.featured,
+        year: definition.year,
+        image: definition.image,
+        status: definition.status[locale],
+    };
 }
 
-export const projects: readonly Project[] = projectCoreList.map(attachDescription);
+export function getProjects(locale: SiteLocale = DEFAULT_SITE_LOCALE): readonly Project[] {
+    return projectDefinitions.map((definition) => toProject(definition, locale));
+}
 
-export const getProjectBySlug = (slug: string): Project | null => {
-    return projects.find((project) => project.slug === slug) ?? null;
-};
+export function getProjectBySlug(
+    slug: string,
+    locale: SiteLocale = DEFAULT_SITE_LOCALE,
+): Project | null {
+    const definition = projectDefinitions.find((project) => project.slug === slug);
+    return definition ? toProject(definition, locale) : null;
+}
+
+export const projects = getProjects();
