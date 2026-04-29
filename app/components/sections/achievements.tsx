@@ -72,7 +72,7 @@ export default function Achievements() {
     }, [content.achievements.items]);
 
     return (
-        <section ref={sectionRef} className="achievements-section relative bg-background overflow-hidden py-16 sm:py-20 lg:py-28">
+        <section ref={sectionRef} id="achievements" className="achievements-section relative bg-background overflow-hidden py-16 sm:py-20 lg:py-28">
             <div className="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-20 xl:px-32">
                 <div className="achievements-header mb-10 md:mb-14 lg:mb-16">
                     <span className="text-[10px] uppercase tracking-[0.3em] font-mono text-foreground/45 mb-3 block">

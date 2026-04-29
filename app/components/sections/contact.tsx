@@ -18,9 +18,9 @@ export default function Contact() {
     const emailRef = useRef<HTMLAnchorElement>(null);
     const { content } = useSiteLanguage();
 
-    const copyEmail = (e: React.MouseEvent) => {
+    const copyPrimaryContact = (e: React.MouseEvent) => {
         e.preventDefault();
-        navigator.clipboard.writeText(SITE_IDENTITY.email);
+        navigator.clipboard.writeText(SITE_IDENTITY.whatsappNumber);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -108,12 +108,12 @@ export default function Contact() {
                                 </span>
                             </div>
                             <div className="overflow-hidden">
-                                <h2 className="contact-header-text block text-[clamp(3.5rem,9vw,8rem)] font-black uppercase leading-[0.9] text-foreground">
+                                <h2 className="contact-header-text block text-[clamp(2.6rem,6.9vw,6.2rem)] font-black uppercase leading-[0.9] text-foreground">
                                     {content.contact.titleLine1}
                                 </h2>
                             </div>
                             <div className="overflow-hidden">
-                                <h2 className="contact-header-text block text-[clamp(3.5rem,9vw,8rem)] font-black uppercase leading-[0.9] text-foreground/30">
+                                <h2 className="contact-header-text block text-[clamp(2.6rem,6.9vw,6.2rem)] font-black uppercase leading-[0.9] text-foreground/30">
                                     {content.contact.titleLine2}
                                 </h2>
                             </div>
@@ -121,7 +121,7 @@ export default function Contact() {
 
                         <div className="space-y-8 max-w-md">
                             <p className="contact-content text-lg text-foreground/65 leading-relaxed font-light">
-                                {content.contact.description}
+                                {content.contact.bodyText}
                             </p>
 
                             <div className="contact-content flex gap-4">
@@ -148,7 +148,9 @@ export default function Contact() {
                     <div className="w-full h-full flex flex-col justify-center lg:pt-12">
                         <a
                             ref={emailRef}
-                            href={`mailto:${SITE_IDENTITY.email}`}
+                            href={SITE_IDENTITY.whatsapp}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="email-card group relative block w-full h-[300px] lg:h-[400px] overflow-hidden bg-transparent border-t border-border hover:border-foreground/50 transition-colors duration-500 pt-8 sm:pt-12"
                         >
                             <div className="relative h-full flex flex-col justify-between z-10 px-2 sm:px-0">
@@ -162,25 +164,25 @@ export default function Contact() {
                                 </div>
 
                                 <div>
-                                    <span className="text-xs uppercase tracking-[0.2em] text-foreground/45 mb-4 block">{content.contact.emailPrompt}</span>
+                                    <span className="text-xs uppercase tracking-[0.2em] text-foreground/45 mb-4 block">{content.contact.cardPrompt}</span>
                                     <h3 className="flex flex-col text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-black uppercase text-foreground mb-8 leading-[0.9]">
-                                        <span>{SITE_IDENTITY.emailUser}</span>
-                                        <span className="text-foreground/50">{SITE_IDENTITY.emailDomain}</span>
+                                        <span>{content.contact.cardLine1}</span>
+                                        <span className="text-foreground/50">{content.contact.cardLine2}</span>
                                     </h3>
 
                                     <button
-                                        onClick={copyEmail}
+                                        onClick={copyPrimaryContact}
                                         className="inline-flex items-center gap-3 text-sm uppercase tracking-wider text-foreground/50 hover:text-foreground transition-all group/btn"
                                     >
                                         {copied ? (
                                             <>
                                                 <Check className="w-4 h-4 text-green-400" />
-                                                <span className="text-green-400">{content.contact.emailCopied}</span>
+                                                <span className="text-green-400">{content.contact.cardCopiedText}</span>
                                             </>
                                         ) : (
                                             <>
                                                 <Copy className="w-4 h-4" />
-                                                <span className="group-hover/btn:underline decoration-foreground/30 underline-offset-4">{content.contact.copyAddress}</span>
+                                                <span className="group-hover/btn:underline decoration-foreground/30 underline-offset-4">{content.contact.cardCopyText}</span>
                                             </>
                                         )}
                                     </button>

@@ -1,4 +1,4 @@
-# portfolio-eikefrota
+# eikefrotadev
 
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
@@ -89,7 +89,7 @@ O projeto inclui `wrangler.jsonc`, então está preparado para publicação com 
 
 ## Recursos
 
-- Repositório: [github.com/eikefrota/eikefrotaportfolio](https://github.com/eikefrota/eikefrotaportfolio)
+- Repositório: [github.com/eikefrota/eikefrotadev](https://github.com/eikefrota/eikefrotadev)
 - GitHub: [github.com/eikefrota](https://github.com/eikefrota)
 - Currículo: `cv-eikefrota.pdf`
 

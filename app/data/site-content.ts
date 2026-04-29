@@ -97,6 +97,12 @@ type LocaleContent = {
     titleLine2: string;
     description: string;
     socials: readonly SocialLink[];
+    bodyText: string;
+    cardPrompt: string;
+    cardLine1: string;
+    cardLine2: string;
+    cardCopiedText: string;
+    cardCopyText: string;
     emailPrompt: string;
     emailCopied: string;
     copyAddress: string;
@@ -171,8 +177,9 @@ export const SITE_IDENTITY = {
   linkedin: "https://www.linkedin.com/in/eikefrota/",
   githubProfile: "https://github.com/eikefrota",
   instagram: "https://www.instagram.com/eikefrotaa",
-  whatsapp: "https://wa.me/5585999062339",
-  siteUrl: "https://eikefrotaportfolio.netlify.app",
+  whatsappNumber: "+55 85 99906-2339",
+  whatsapp: "https://wa.me/5585999062339?text=Fala%20Eike,%20vi%20seu%20portf%C3%B3lio%20e%20quero%20conversar.",
+  siteUrl: "https://eikefrotadev.netlify.app",
 } as const;
 
 const SHARED_TECH_STACKS: readonly {
@@ -238,6 +245,14 @@ const sharedSocials = [
 const sharedFloatingSocials = [
   ...sharedSocials,
   { name: "Email", url: `mailto:${SITE_IDENTITY.email}` },
+] as const;
+
+const sharedContactSocials = [
+  { name: "WhatsApp", url: SITE_IDENTITY.whatsapp },
+  { name: "Email", url: `mailto:${SITE_IDENTITY.email}` },
+  { name: "LinkedIn", url: SITE_IDENTITY.linkedin },
+  { name: "GitHub", url: SITE_IDENTITY.githubProfile },
+  { name: "Instagram", url: SITE_IDENTITY.instagram },
 ] as const;
 
 const siteContentByLocale: Record<SiteLocale, LocaleContent> = {
@@ -410,11 +425,18 @@ const siteContentByLocale: Record<SiteLocale, LocaleContent> = {
     },
     contact: {
       label: "Contact",
-      titleLine1: "Let's Build",
-      titleLine2: "Together",
+      titleLine1: "Have a Project",
+      titleLine2: "or Idea?",
       description:
         "If you need someone to improve a product with clearer interfaces, stronger integrations, and consistent technical delivery, that's where I create the most value today.",
-      socials: sharedSocials,
+      socials: sharedContactSocials,
+      bodyText:
+        "I build systems, websites, and applications with a focus on quality and performance. If you want to start or improve a product, WhatsApp is the fastest way to reach me.",
+      cardPrompt: "Fast replies on WhatsApp",
+      cardLine1: "Start the",
+      cardLine2: "conversation",
+      cardCopiedText: "Number copied",
+      cardCopyText: "Copy number",
       emailPrompt: "Drop me a line",
       emailCopied: "Email copied",
       copyAddress: "Copy address",
@@ -426,6 +448,7 @@ const siteContentByLocale: Record<SiteLocale, LocaleContent> = {
       nav: [
         { label: "About", href: "#about" },
         { label: "Projects", href: "#projects" },
+        { label: "Experience", href: "#achievements" },
         { label: "Testimonials", href: "#testimonials" },
         { label: "Contact", href: "#contact" },
       ],
@@ -650,11 +673,18 @@ const siteContentByLocale: Record<SiteLocale, LocaleContent> = {
     },
     contact: {
       label: "Contato",
-      titleLine1: "Vamos Construir",
-      titleLine2: "Juntos",
+      titleLine1: "Quer fazer",
+      titleLine2: "um projeto?",
       description:
         "Se você precisa evoluir um produto com interfaces mais claras, integrações mais fortes e consistência técnica na entrega, esse é o tipo de contexto em que eu mais gero valor hoje.",
-      socials: sharedSocials,
+      socials: sharedContactSocials,
+      bodyText:
+        "Desenvolvo sistemas, sites e aplicacoes com foco em qualidade e performance. Se voce quer tirar um projeto do papel ou evoluir um produto, o caminho mais rapido e pelo WhatsApp.",
+      cardPrompt: "Resposta rapida por aqui",
+      cardLine1: "Falar no",
+      cardLine2: "WhatsApp",
+      cardCopiedText: "Numero copiado",
+      cardCopyText: "Copiar numero",
       emailPrompt: "Me envie uma mensagem",
       emailCopied: "Email copiado",
       copyAddress: "Copiar endereço",
@@ -666,6 +696,7 @@ const siteContentByLocale: Record<SiteLocale, LocaleContent> = {
       nav: [
         { label: "Sobre", href: "#about" },
         { label: "Projetos", href: "#projects" },
+        { label: "Trajetória", href: "#achievements" },
         { label: "Depoimentos", href: "#testimonials" },
         { label: "Contato", href: "#contact" },
       ],
